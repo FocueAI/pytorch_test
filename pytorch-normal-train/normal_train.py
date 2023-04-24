@@ -53,7 +53,9 @@ for epoch in tqdm(range(EPOCH)):
         # print(f'acc:{acc}')
         label_one_hot = F.one_hot(labels, num_classes)
         # print('labels-shapeL',label_one_hot.shape)
-        loss = loss_fn(output, label_one_hot.float())
+        # loss = loss_fn(output, label_one_hot.float())
+        loss = loss_fn(output, labels)
+
         train_loss += loss.item() / batch_size
         tensorboard_writer.add_scalar('loss/train_step', loss, tot_step+step)  # 其中loss是要存的值, epoch是轴
         tensorboard_writer.flush()
