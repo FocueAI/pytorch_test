@@ -4,7 +4,12 @@ sys.path.append('./model_utils')
 import torch.optim
 from omegaconf import DictConfig
 from trainer import Trainer
-from model_utils import kerasmodel
+# from model_utils import kerasmodel,summary
+from model_utils.kerasmodel import KerasModel
+from model_utils.summary import summary
+
+
+
 from torch import nn
 from torch.utils.data import DataLoader
 from dataset import My_mnist_dataset
@@ -77,12 +82,17 @@ def main():
     global net
     # print(f'--main--cfg:{cfg}')
     # trainer = Trainer(cfg)
-    loss_fn1=torch.nn.CrossEntropyLoss()
-    model = kerasmodel.KerasModel(net,
-        loss_fn=nn.CrossEntropyLoss(),
+    loss_fn = torch.nn.CrossEntropyLoss()
+    model = KerasModel(net,
+        loss_fn=loss_fn,
         optimizer = torch.optim.Adam(net.parameters(), lr=0.001),
         metrics_dict = {"acc":Accuracy()} )  # 这里运用的很巧妙
-
+    #-------------------- 查看模型的结构 --------------------#
+    input_feature = torch.zeros(32, 1, 28, 28)
+    print(f'input_feature.shape:{input_feature.shape}')
+    # train_loader
+    summary(model, input_data=input_feature)
+    #-----------------------------------------------------#
     dfhistory = model.fit(train_data=train_loader,
                           val_data=val_loader,
                           epochs=20,
