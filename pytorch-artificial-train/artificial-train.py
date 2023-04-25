@@ -1,6 +1,7 @@
 import hydra
 import sys
-sys.path.append('./model_utils')
+# sys.path.append('./model_utils')
+# print(f'sys.path:{sys.path}')
 import torch.optim
 from omegaconf import DictConfig
 from trainer import Trainer
@@ -8,11 +9,16 @@ from trainer import Trainer
 from model_utils.kerasmodel import KerasModel
 from model_utils.summary import summary
 
-
-
 from torch import nn
 from torch.utils.data import DataLoader
 from dataset import My_mnist_dataset
+
+from model_utils.kerascallbacks import WandbCallback, MiniLogCallback, TensorBoardCallback
+tensorboard_record = TensorBoardCallback(save_dir='runs',
+                                         model_name='mnist_cnn',
+                                         log_weight=True,
+                                          log_weight_freq=5
+                               )
 
 # https://github.com/lyhue1991/torchkeras.git
 
@@ -86,7 +92,7 @@ def main():
     model = KerasModel(net,
         loss_fn=loss_fn,
         optimizer = torch.optim.Adam(net.parameters(), lr=0.001),
-        metrics_dict = {"acc":Accuracy()} )  # 这里运用的很巧妙
+        metrics_dict = {"acc":Accuracy()},)  # 这里运用的很巧妙
     #-------------------- 查看模型的结构 --------------------#
     input_feature = torch.zeros(32, 1, 28, 28)
     print(f'input_feature.shape:{input_feature.shape}')
@@ -100,9 +106,9 @@ def main():
                           monitor="val_acc",
                           mode="max",
                           ckpt_path='checkpoint.pt',
-                          plot=False,
+                          plot=True,
                           quiet=False,
-                          callbacks=None # 下面要探索这类钩子函数的用法
+                          callbacks=[tensorboard_record] # TODO: 下面要探索这类钩子函数的用法
                           )
 
 

@@ -74,7 +74,8 @@ class EpochRunner: # 数据跑一个epoch的逻辑(要调用数据跑一步的�
                     total=len(dataloader),
                     file=sys.stdout,
                     disable=not self.accelerator.is_local_main_process or self.quiet,
-                    ncols=100, # TODO: 要加上进度条的描述信息.eg: desc = f'{self.stage}-info'
+                    ncols=100,
+                    desc = f'{self.stage.upper()}-INFO==>'
                     )
 
         epoch_losses = {}
@@ -150,7 +151,7 @@ class KerasModel(torch.nn.Module):
             for callback_obj in self.callbacks:
                 callback_obj.on_fit_start(model=self)  # TODO: 等赋值钩子函数之后在做研究
 
-        start_epoch = 1 if self.from_scratch else 0  # TODO:  start_epoch = 或许配置中的开始值 if not self.from_scratch else 0 ======> 这样子更合理一点, 我的修改意见
+        start_epoch = 1 if self.from_scratch else 0    # TODO:  start_epoch = 或许配置中的开始值 if not self.from_scratch else 0 ======> 这样子更合理一点, 我的修改意见
         for epoch in range(start_epoch, epochs + 1):
             should_quiet = False if quiet == False else (quiet == True or epoch > quiet)
 
