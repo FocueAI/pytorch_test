@@ -1,4 +1,4 @@
 minist_data/
 *.pt
 *.log
-
+*.xml
