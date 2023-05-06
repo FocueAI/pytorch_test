@@ -60,7 +60,7 @@ class My_mnist_dataset(data.Dataset):
         返回有效数据的个数
         :return:
         """
-        return len(self.img_name_list)
+        return len(self.img_name_list) # 调试的时候为了加快速度,所以//100
 
 
 if __name__ == '__main__':

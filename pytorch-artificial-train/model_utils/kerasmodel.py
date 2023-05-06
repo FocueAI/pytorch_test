@@ -6,7 +6,7 @@ import pandas as pd
 import torch
 from accelerate import Accelerator
 
-
+# 可以让你的控制台打印,变成富文本格式.调用该函数后 print(out) 就会在控制台呈现富文本格式的!
 def colorful(obj, color="red", display_type="plain"):
     color_dict = {"black": "30", "red": "31", "green": "32", "yellow": "33",
                   "blue": "34", "purple": "35", "cyan": "36", "white": "37"}
@@ -18,8 +18,8 @@ def colorful(obj, color="red", display_type="plain"):
     out = '\033[{};{}m'.format(display, color_code) + s + '\033[0m'
     return out
 
-
-class StepRunner: # 数据跑一步的逻辑
+# 重点研究一
+class StepRunner: # 数据跑一步的逻辑,这是最重要的逻辑.
     def __init__(self, net, loss_fn, accelerator, stage="train", metrics_dict=None,
                  optimizer=None, lr_scheduler=None
                  ):
@@ -60,7 +60,7 @@ class StepRunner: # 数据跑一步的逻辑
                 step_metrics['lr'] = 0.0
         return step_losses, step_metrics # 形式 {'train_loss':2.32777}, {'train_acc':0.15625, 'lr':0.001}
 
-
+# 重点研究二
 class EpochRunner: # 数据跑一个epoch的逻辑(要调用数据跑一步的逻辑)
     def __init__(self, steprunner, quiet=False):
         self.steprunner = steprunner
@@ -170,7 +170,7 @@ class KerasModel(torch.nn.Module):
                 optimizer=self.optimizer if epoch > 0 else None,
                 lr_scheduler=self.lr_scheduler if epoch > 0 else None
             )
-
+            # TODO: 学习率的调整策略,也有可能是在这里做, 源码是在每一个step就考虑, 这个要重新考量一下
             train_epoch_runner = self.EpochRunner(train_step_runner, should_quiet)
             train_metrics = {'epoch': epoch}
             train_metrics.update(train_epoch_runner(train_dataloader))

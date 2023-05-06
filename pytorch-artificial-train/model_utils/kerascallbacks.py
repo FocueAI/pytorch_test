@@ -160,7 +160,7 @@ class MiniLogCallback:
      
 class VisProgress:
     def __init__(self,figsize = (6,4)):
-        self.figsize = (6,4)
+        self.figsize = figsize
     
     def on_fit_start(self,model: 'KerasModel'):
         from .fastprogress import master_bar
