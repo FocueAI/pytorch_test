@@ -16,7 +16,7 @@ for i in range(num_decoder_layers):
     transformer_decoder_layer()
 
 
-
+nn.MultiheadAttention()
 
 # a = torch.tensor([1, 2, 3, 4])
 # b = torch.tensor([2, 1, 3, 4])
